@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Госсинт — концептуальная единая система генерации сигналов. Синтезатор с окнами приёма, регуляторами и электронной очередью."
+    />
+    <title>Госсинт</title>
+    <script
+      src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"
+      defer
+    ></script>
+    <script src="script.js" defer></script>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='0' fill='%23000000'/%3E%3Cpath d='M6 17h5l3-9 4 16 3-7h5' fill='none' stroke='white' stroke-width='2.5'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <svg width="0" height="0" aria-hidden="true" style="position: absolute">
+      <defs>
+        <symbol id="i-wave" viewBox="0 0 24 24">
+          <path d="M2 12h3l3-8 4 16 4-16 3 8h3" />
+        </symbol>
+        <symbol id="i-grid" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" />
+        </symbol>
+        <symbol id="i-power" viewBox="0 0 24 24">
+          <path d="M12 2v10M6 5a9 9 0 1 0 12 0" />
+        </symbol>
+        <symbol id="i-info" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v6m0-10v1" />
+        </symbol>
+        <symbol id="i-controls" viewBox="0 0 24 24">
+          <path
+            d="M5 3v7m0 4v7M12 3v12m0 4v2M19 3v3m0 4v11M2 10h6m1 5h6m1-9h6"
+          />
+        </symbol>
+        <symbol id="i-queue" viewBox="0 0 24 24">
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="M8 5v3m0 3v2m0 3v3m4-9h5m-5 4h3" />
+        </symbol>
+        <symbol id="i-user" viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="3" />
+          <path d="M5 21v-3a7 7 0 0 1 14 0v3" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 6v6l4 2" />
+        </symbol>
+        <symbol id="i-lock" viewBox="0 0 24 24">
+          <rect x="5" y="10" width="14" height="11" rx="2" />
+          <path d="M8 10V6a4 4 0 0 1 8 0v4m-4 5v2" />
+        </symbol>
+        <symbol id="i-reset" viewBox="0 0 24 24">
+          <path d="M3 10a9 9 0 1 1 1 7M3 4v6h6" />
+        </symbol>
+        <symbol id="i-play" viewBox="0 0 24 24">
+          <path d="m8 4 12 8-12 8Z" />
+        </symbol>
+        <symbol id="i-pause" viewBox="0 0 24 24">
+          <path d="M8 4v16M16 4v16" />
+        </symbol>
+      </defs>
+    </svg>
+    <header>
+      <div class="header-inner">
+        <div class="brand">
+          <svg
+            class="emblem"
+            viewBox="0 0 48 54"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M24 3 43 10v15c0 12-9 21-19 26C14 46 5 37 5 25V10Z"
+              fill="#000000"
+            />
+            <path
+              d="M13 27h5l3-10 5 20 4-10h5"
+              stroke="white"
+              stroke-width="2.5"
+              stroke-linejoin="round"
+            />
+            <path d="M19 9h10" stroke="#EAEAEA" stroke-width="2" />
+          </svg>
+          <div>
+            <div class="brand-name">гос<span>синт</span></div>
+            <div class="brand-caption">Бюро контроля сигналов</div>
+          </div>
+        </div>
+        <div class="user">
+          <div class="avatar">
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+            >
+              <use href="#i-user" />
+            </svg>
+          </div>
+          <div>
+            <strong>Авторизован через ЕСИА <span class="check">✓</span></strong
+            ><small>Личный кабинет · Музыкант</small>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="nav-label">
+          <svg
+            width="17"
+            height="17"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+          >
+            <use href="#i-wave" /></svg
+          >Генерация сигналов
+        </div>
+        <div class="portal-meta">КОНФИДЕНЦИАЛЬНО <span>ВЫПУСК 001</span></div>
+      </div>
+    </div>
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <div class="ticker-group">
+          САМАЯ ПРОСТАЯ ФОРМА КОНТРОЛЯ СОЗНАНИЯ — ПОВТОРЕНИЕ &nbsp; // &nbsp;
+          ПОДЧИНЯЙСЯ СИГНАЛУ &nbsp; // &nbsp; САМАЯ ПРОСТАЯ ФОРМА КОНТРОЛЯ
+          СОЗНАНИЯ — ПОВТОРЕНИЕ &nbsp; // &nbsp; ПОДЧИНЯЙСЯ СИГНАЛУ &nbsp; //
+          &nbsp;
+        </div>
+        <div class="ticker-group">
+          САМАЯ ПРОСТАЯ ФОРМА КОНТРОЛЯ СОЗНАНИЯ — ПОВТОРЕНИЕ &nbsp; // &nbsp;
+          ПОДЧИНЯЙСЯ СИГНАЛУ &nbsp; // &nbsp; САМАЯ ПРОСТАЯ ФОРМА КОНТРОЛЯ
+          СОЗНАНИЯ — ПОВТОРЕНИЕ &nbsp; // &nbsp; ПОДЧИНЯЙСЯ СИГНАЛУ &nbsp; //
+          &nbsp;
+        </div>
+      </div>
+    </div>
+    <main>
+      <div class="page-heading">
+        <div>
+          <div class="directive-tag">КОНТРОЛЬ ЧЕРЕЗ ЗВУК</div>
+          <p class="subtitle">
+            Доступ ограничен. Повторите запрос трижды. Получите разрешение на
+            сигнал.
+          </p>
+        </div>
+        <button class="power" id="power" aria-pressed="false">
+          <svg
+            width="18"
+            height="18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <use href="#i-power" /></svg
+          ><span>Включить питание</span>
+        </button>
+      </div>
+      <div class="notice">
+        <svg
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+        >
+          <use href="#i-info" />
+        </svg>
+        <div>
+          <strong>ПРОТОКОЛ / 03</strong> Три запроса для раскрытия дела. Отказ
+          блокирует доступ на 2 секунды.
+        </div>
+      </div>
+      <div class="layout">
+        <section class="surface services" aria-labelledby="services-title">
+          <div class="section-heading">
+            <div class="heading-left">
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <use href="#i-grid" />
+              </svg>
+              <h2 id="services-title">01 / Секретные дела</h2>
+            </div>
+            <span class="badge">8 ПРОТОКОЛОВ</span>
+          </div>
+          <p class="subtext">РАСКРЫТИЕ ПО ЗАПРОСУ // ДОПУСК: ТРИ НАЖАТИЯ</p>
+          <div class="service-grid" id="services"></div>
+          <div class="service-foot">
+            <span class="hint"
+              ><svg
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <use href="#i-lock" /></svg
+              >Каждый сигнал требует трёх согласований</span
+            ><span id="system-status"
+              ><i class="small-dot"></i> Питание выключено</span
+            >
+          </div>
+        </section>
+        <aside class="control-sidebar">
+          <section class="surface controls" aria-labelledby="controls-title">
+            <div class="section-heading">
+              <div class="heading-left">
+                <svg
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                >
+                  <use href="#i-controls" />
+                </svg>
+                <h2 id="controls-title">02 / Параметры контроля</h2>
+              </div>
+            </div>
+            <div class="sliders" id="sliders"></div>
+          </section>
+          <div class="registry-note">
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <use href="#i-info" />
+            </svg>
+            <div>
+              <p>
+                Срок оказания услуги — 3 нажатия. При отказе повторная подача
+                доступна через 2 секунды.
+              </p>
+            </div>
+          </div>
+          <div class="bureau-stamp" aria-hidden="true">
+            <b>СЛЫШИШЬ</b>
+            <div class="barcode"></div>
+            <small>0 51125 01800 3</small>
+            <p>СИГНАЛ?</p>
+          </div>
+        </aside>
+      </div>
+      <section class="surface queue" aria-labelledby="queue-title">
+        <div class="queue-heading">
+          <div class="heading-left">
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <use href="#i-queue" />
+            </svg>
+            <h2 id="queue-title">03 / Цикл повторения</h2>
+          </div>
+          <div class="transport">
+            <button id="transport" aria-pressed="false">
+              <svg
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+              >
+                <use href="#i-play" /></svg
+              ><span>Запустить</span></button
+            ><button
+              class="reset"
+              id="reset"
+              aria-label="Сбросить текущий шаг очереди"
+              title="Сбросить текущий шаг"
+            >
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+              >
+                <use href="#i-reset" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <p class="subtext" style="margin-bottom: 0">
+          Выберите дела для автоматического повторения запросов
+        </p>
+        <div class="tickets" id="tickets"></div>
+        <div class="queue-foot">
+          <span id="queue-status">Ожидание запуска</span
+          ><span><span id="bpm-label">120</span> BPM · 1/8 · 8 шагов</span>
+        </div>
+      </section>
+      <section class="surface log-panel" aria-labelledby="log-title">
+        <div class="log-head">
+          <div class="heading-left">
+            <svg
+              width="19"
+              height="19"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            >
+              <use href="#i-clock" />
+            </svg>
+            <h2 id="log-title">Архив</h2>
+          </div>
+          <p class="subtext">КОНТРОЛЬ ОБРАЩЕНИЙ // ВСЁ ЗАПИСАНО</p>
+          <div class="log-live">
+            <i class="small-dot" id="log-dot"></i
+            ><span id="log-connection">Система в режиме ожидания</span>
+          </div>
+        </div>
+        <div
+          class="log-list"
+          id="log"
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions"
+        ></div>
+        <div class="log-bottom">
+          <span id="log-count">0 записей</span
+          ><button class="clear" id="clear">Очистить</button>
+        </div>
+      </section>
+    </main>
+
+    <div id="citizen-cursor" aria-hidden="true" data-state="idle">
+      <span class="citizen-label">ГРАЖДАНИН #0412</span>
+      <svg
+        class="citizen-figure"
+        viewBox="-16 -5 48 40"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          fill="#000"
+          stroke="#eaeaea"
+          stroke-width="1.2"
+          stroke-linejoin="round"
+          paint-order="stroke fill"
+        >
+          <g class="citizen-body">
+            <path d="M-3 8-6 11-7 23H6L4 11 2 8Z" />
+            <path d="M-5 22-5 30H-1L0 23 2 30H6L4 22Z" />
+            <path d="M-4 10-8 14-8 21-6 22-5 15-2 12Z" />
+            <path
+              class="citizen-arm"
+              d="M3 10 6 12 9 16 11 14 13 15 10 20 7 19 2 13Z"
+            />
+            <path d="M-1 9 0 12 1 9 1 17-1 17Z" fill="#eaeaea" stroke="none" />
+            <path
+              d="M-4 11-1 14M3 11 1 14"
+              fill="none"
+              stroke="#eaeaea"
+              stroke-width=".65"
+            />
+          </g>
+          <circle id="citizen-head" cx="0" cy="3" r="3" />
+        </g>
+      </svg>
+    </div>
+  </body>
+</html>
